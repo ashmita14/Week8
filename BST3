@@ -1,0 +1,179 @@
+//Including libraries
+#include<iostream>
+using namespace std;
+
+//declaring class Node
+class Node{
+	public:
+	//declaring the data and two pointers of each node
+	int data;
+	Node* left;
+	Node* right;
+	//default constructor to initialize NULL value to the pointers and 0 to the data
+	Node(){
+		data=0;
+		left=NULL;
+		right=NULL;
+	}
+};
+
+//Declaring class BST (Binary Search Tree)
+class BST{
+	public:
+	//delcaring root pointer to point to the first element of the tree, which has no parents
+	Node* root;
+	//default constructor to initialize root by NULL
+	BST(){
+	root=NULL;
+	}
+	public:
+
+	//writing function to insert values, by calling a function insertHelper 
+	void insert(int value){
+		//passing starting node address and value to be input to insertHelper
+		insertHelper(root, value);
+	}
+	//function which will actually insert the values by recursion
+	void insertHelper(Node* current, int value){
+		//first condition to check if binary tree is empty
+		if(current==NULL){
+			//new node formed and data stored
+			current=new Node;
+			current->data=value;
+			//storing address of new node in root, making it the first node
+			if(root==NULL) root=current;
+			return;
+		}
+		//if tree is not empty
+		else{
+			//if the value to be inserted is lesser than the node, then moving left to insert it
+			if(current->data>value){
+				//if left of current Node is NULL insert it.
+				if(current->left==NULL) {	
+					current->left=new Node;
+					current->left->data=value;
+				}
+				//if left of current node is not NULL, then move left till we reach appropriate node
+				else insertHelper(current->left, value); //recursive function call
+			}
+			//if value to be inserted is greater than the node, then moving right
+			if(current->data<value){
+				//if right of current Node is NULL, insert it
+				if(current->right==NULL){
+					current->right=new Node;
+					current->right->data=value;
+				}
+				// if right of current node is not NULL, then move right 
+				else insertHelper(current->right, value); //recursive funtion call
+			}
+		}
+	}
+
+	//function to display binary search tree using another function display2
+	void display(){
+		//passing starting address to display2
+		display2(root);
+	}
+	//funtion which actually displays the binary search tree elements in increasing order (or decreasing, as per code) by using recursion
+	void display2(Node* current){
+		//Base concdition
+		//if current is NULL, then the function returns as there is nothing left to print
+		if(current==NULL) return;
+		//recursively calling function and moving it to the left of the tree, the function finishes the left half of each tree first
+		display2(current->left);
+		//displaying the data of current node, gets executed as the function returns, so left side first then right
+		cout<<current->data<<",";
+		//recursively calling function and moving it towards right of the tree
+		display2(current->right);
+	}
+	
+	//writing function to cout number of nodes
+	int count(Node* temp){
+		//declaring variables
+		int cn;
+		cn=count1(cn, root);
+		return cn;
+	}
+	int count1(int c, Node* temp1){
+		//base condition
+		//if temp is NULL; then the function returns as there is nothing left to count
+		if(temp1==NULL) return c;
+		//recursively calling function and moving it to the left of the tree, the function finishes the left half of each tree first
+		count(temp1->left);
+		//incrementing value
+		c++;
+		//recursively calling function and moving it towards right of the tree
+		count(temp1->right);
+	}
+
+	//writing function to print nodes in a given range
+	int rangeSearch(int k1, int k2){
+		//declaring variables
+		int cn=0;
+		int val;
+		//declaring pointer, starting from root, to move across tree
+		Node* current=root;
+		//initializing val
+		val=current->data;
+		//calling function rangeSearch1 to print the appropriate values 
+		cn=rangeSearch1(k1, k2, 0, current);
+	}
+	//helper function to print the required values
+	int rangeSearch1(int n1, int n2, int c, Node* temp){
+		//base condition
+		//if current's data is equal to NULL, then return
+		if(temp==NULL) return c;
+		//moving left
+		rangeSearch1(n1, n2, c, temp->left);
+		//if value is in given range then print and increment counter
+		if(temp->data>=n1 && temp->data<=n2){
+			//displaying	
+			cout<<temp->data<<",";
+			c++; //incrementing value
+		}
+		//moving left
+		rangeSearch1(n1, n2, c, temp->right);
+	}
+
+	//writing function to calculate height
+	int height(Node* current){
+		//declaring variables
+		int max, hl, hr;
+		//calling functioon recursively to find height
+		if(root==NULL) return 0;
+		else{
+			hl=height(current->left);
+			hr=height(current->right);
+		}
+		if(hl>hr) return hl+1;
+		else return hr+1;
+	}
+};
+
+	//writing main function
+	int main(){
+		//declaring variables and creating object of class BST
+		int ht, cn;
+		BST b;
+		//inserting values
+		b.insert(4);
+		b.insert(5);
+		b.insert(3);
+		b.insert(2);
+		b.insert(1);
+		b.insert(6);
+		b.insert(7);
+		b.display();
+		//cn=b.count(b.root);
+		//cout<<"Number of elements in Binary Search tree = "<<cn<<endl;
+		//b.rangeSearch(2,6);
+		ht=b.height(b.root);
+		cout<<"Height of tree = "<<ht<<endl;
+		return 0;
+	}
+
+		
+		
+			
+			
+			
